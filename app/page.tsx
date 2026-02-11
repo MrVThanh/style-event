@@ -1,10 +1,11 @@
 "use client";
 
 import FilledImage from "@/components/ui/filled-image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const config = {
     web_url : "",
@@ -28,6 +29,14 @@ export default function Home() {
     }
   }, [webUrl]);
 
+  useEffect(() => {
+    if (hasVideo && videoRef.current) {
+      videoRef.current.play().catch((err: unknown) => {
+        console.log("Video autoplay prevented:", err);
+      });
+    }
+  }, [hasVideo]);
+
   if (webUrl) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-black text-white">
@@ -49,6 +58,7 @@ export default function Home() {
         />
       ) : hasVideo ? (
         <video
+          ref={videoRef}
           src={config.video_url}
           autoPlay
           muted
