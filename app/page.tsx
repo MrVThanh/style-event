@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const playAttemptedRef = useRef(false);
 
   const config = {
     web_url : "",
@@ -30,11 +31,37 @@ export default function Home() {
   }, [webUrl]);
 
   useEffect(() => {
-    if (hasVideo && videoRef.current) {
-      videoRef.current.play().catch((err: unknown) => {
-        console.log("Video autoplay prevented:", err);
+    const video = videoRef.current;
+    if (!hasVideo || !video || playAttemptedRef.current) return;
+
+    playAttemptedRef.current = true;
+
+    const attemptPlay = () => {
+      video.play().catch((err: unknown) => {
+        console.log("Video autoplay prevented, waiting for user interaction:", err);
+        
+        // Safari often requires user interaction - add one-time click handler
+        const handleFirstInteraction = () => {
+          video.play().catch((e: unknown) => {
+            console.error("Play failed even after interaction:", e);
+          });
+        };
+
+        document.addEventListener("click", handleFirstInteraction, { once: true });
+        document.addEventListener("touchstart", handleFirstInteraction, { once: true });
       });
+    };
+
+    // Try to play when video can play
+    if (video.readyState >= 3) {
+      attemptPlay();
+    } else {
+      video.addEventListener("canplay", attemptPlay, { once: true });
     }
+
+    return () => {
+      video.removeEventListener("canplay", attemptPlay);
+    };
   }, [hasVideo]);
 
   if (webUrl) {
@@ -64,7 +91,7 @@ export default function Home() {
           muted
           loop
           playsInline
-          controls
+          preload="auto"
           className="absolute inset-0 h-full w-full object-cover"
         />
       ) : null}
