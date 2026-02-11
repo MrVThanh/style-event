@@ -1,7 +1,7 @@
 "use client";
 
 import FilledImage from "@/components/ui/filled-image";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
@@ -30,13 +30,32 @@ export default function Home() {
       // Prefer web_url: replace so user can't "back" to this page.
       window.location.replace(webUrl);
     }
-  }, [webUrl]);
+    
+    // Try to enable autoplay on Safari by triggering early
+    const enableAutoplay = () => {
+      const video = videoRef.current;
+      if (video && hasVideo) {
+        video.play().catch(() => {
+          // Will retry in the main video effect
+        });
+      }
+    };
+    
+    // Small delay to ensure video element is rendered
+    if (hasVideo && !webUrl) {
+      setTimeout(enableAutoplay, 100);
+    }
+  }, [webUrl, hasVideo]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!hasVideo || !video || playAttemptedRef.current) return;
 
     playAttemptedRef.current = true;
+
+    // Ensure video is muted for Safari autoplay
+    video.muted = true;
+    video.playsInline = true;
 
     const handleError = () => {
       console.error("Video failed to load");
@@ -47,21 +66,57 @@ export default function Home() {
       setShowPlayHint(false);
     };
 
+    const forcePlay = () => {
+      if (video.paused) {
+        video.muted = true; // Ensure still muted
+        video.play().catch(() => {
+          // Silently fail, will be handled by other events
+        });
+      }
+    };
+
     const attemptPlay = () => {
-      video.play().catch((err: unknown) => {
-        console.log("Video autoplay prevented, waiting for user interaction:", err);
-        
-        // Show hint after 1 second if video still not playing
-        setTimeout(() => {
-          if (video.paused) {
-            setShowPlayHint(true);
-          }
-        }, 1000);
-      });
+      // Ensure muted before playing
+      video.muted = true;
+      
+      // Try to play immediately
+      video.play()
+        .then(() => {
+          console.log("Video playing successfully");
+          setShowPlayHint(false);
+        })
+        .catch((err: unknown) => {
+          console.log("Initial autoplay prevented:", err);
+          
+          // For Safari mobile, try again after a short delay
+          setTimeout(() => {
+            video.muted = true;
+            video.play()
+              .then(() => setShowPlayHint(false))
+              .catch(() => {
+                // If still fails, show hint after 2 seconds
+                setTimeout(() => {
+                  if (video.paused) {
+                    setShowPlayHint(true);
+                  }
+                }, 2000);
+              });
+          }, 300);
+        });
     };
 
     video.addEventListener("error", handleError);
     video.addEventListener("play", handlePlay);
+    video.addEventListener("loadedmetadata", forcePlay);
+    video.addEventListener("loadeddata", forcePlay);
+    
+    // Try to play on visibility change (when user returns to tab)
+    const handleVisibilityChange = () => {
+      if (!document.hidden && video.paused) {
+        forcePlay();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     // Try to play when video can play
     if (video.readyState >= 3) {
@@ -74,17 +129,30 @@ export default function Home() {
       video.removeEventListener("canplay", attemptPlay);
       video.removeEventListener("error", handleError);
       video.removeEventListener("play", handlePlay);
+      video.removeEventListener("loadedmetadata", forcePlay);
+      video.removeEventListener("loadeddata", forcePlay);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [hasVideo]);
 
   const handleScreenTap = () => {
     const video = videoRef.current;
     if (video && video.paused) {
-      video.play().catch((e: unknown) => {
-        console.error("Play failed:", e);
-      });
-      setShowPlayHint(false);
+      video.muted = true; // Ensure muted
+      video.play()
+        .then(() => {
+          setShowPlayHint(false);
+          console.log("Video played after user interaction");
+        })
+        .catch((e: unknown) => {
+          console.error("Play failed even after tap:", e);
+        });
     }
+  };
+
+  const handleTouch = (e: React.TouchEvent) => {
+    // Handle touch separately to ensure play on mobile
+    handleScreenTap();
   };
 
   if (webUrl) {
@@ -101,7 +169,7 @@ export default function Home() {
     <div 
       className="relative h-screen w-screen overflow-hidden bg-black"
       onClick={handleScreenTap}
-      onTouchStart={handleScreenTap}
+      onTouchEnd={handleTouch}
     >
       {isMounted && hasImage ? (
         <FilledImage
@@ -120,7 +188,12 @@ export default function Home() {
             loop
             playsInline
             preload="auto"
+            disablePictureInPicture
             className="absolute inset-0 h-full w-full object-cover"
+            style={{ 
+              WebkitPlaysinline: 'true',
+              objectFit: 'cover'
+            } as React.CSSProperties}
           />
           {showPlayHint && !videoError && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm">
