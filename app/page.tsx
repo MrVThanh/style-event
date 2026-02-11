@@ -11,10 +11,9 @@ export default function Home() {
   const playAttemptedRef = useRef(false);
 
   const config = {
-    web_url :
-    "https://www.rockwool.com/north-america/",
+    web_url: "https://www.rockwool.com/north-america/",
     video_url: "",
-      // "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770782911590308487_video_hung-dev-test.mp4?Expires=4924382998&Signature=e-VCVg8fNSWIzHxE56cyCayeTUpMfPG3cr~v7azTIAZav3glSjgBzQ9lXIZ6hVwcEe-lU4PNfCIl6PllNw~WfeBB1AYY0IcsRmzi-teVcG0XIdPIu-jykDMjWcyKGTLA18~w3bbAL0gscks4u7cAxiTUjP2r8Q9B6sbbg-vKFEzbFpj4hYXGUcCIMusXZvJQCBFy8kN-Vm7JTsFhueQn1XNZc4PLRZQblh~laYFYSA-CEwpxSjZeHP7FNhRcRZjF0HYR13ZWTmXh4txdygJwpJhxlbWU6CWRBsNH8SvAyqSW4SWCWXoHbwLczmllQVHoetnfuRhKUct0UNjfa5NBDg__&Key-Pair-Id=K1RAOUJU1Q3EVC",
+    // "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770782911590308487_video_hung-dev-test.mp4?Expires=4924382998&Signature=e-VCVg8fNSWIzHxE56cyCayeTUpMfPG3cr~v7azTIAZav3glSjgBzQ9lXIZ6hVwcEe-lU4PNfCIl6PllNw~WfeBB1AYY0IcsRmzi-teVcG0XIdPIu-jykDMjWcyKGTLA18~w3bbAL0gscks4u7cAxiTUjP2r8Q9B6sbbg-vKFEzbFpj4hYXGUcCIMusXZvJQCBFy8kN-Vm7JTsFhueQn1XNZc4PLRZQblh~laYFYSA-CEwpxSjZeHP7FNhRcRZjF0HYR13ZWTmXh4txdygJwpJhxlbWU6CWRBsNH8SvAyqSW4SWCWXoHbwLczmllQVHoetnfuRhKUct0UNjfa5NBDg__&Key-Pair-Id=K1RAOUJU1Q3EVC",
     image_url:
       // "https://upload.wikimedia.org/wikipedia/commons/7/70/Example.png",
       "",
@@ -30,7 +29,7 @@ export default function Home() {
       // Prefer web_url: replace so user can't "back" to this page.
       window.location.replace(webUrl);
     }
-    
+
     // Try to enable autoplay on Safari by triggering early
     const enableAutoplay = () => {
       const video = videoRef.current;
@@ -40,7 +39,7 @@ export default function Home() {
         });
       }
     };
-    
+
     // Small delay to ensure video element is rendered
     if (hasVideo && !webUrl) {
       setTimeout(enableAutoplay, 100);
@@ -78,20 +77,22 @@ export default function Home() {
     const attemptPlay = () => {
       // Ensure muted before playing
       video.muted = true;
-      
+
       // Try to play immediately
-      video.play()
+      video
+        .play()
         .then(() => {
           console.log("Video playing successfully");
           setShowPlayHint(false);
         })
         .catch((err: unknown) => {
           console.log("Initial autoplay prevented:", err);
-          
+
           // For Safari mobile, try again after a short delay
           setTimeout(() => {
             video.muted = true;
-            video.play()
+            video
+              .play()
               .then(() => setShowPlayHint(false))
               .catch(() => {
                 // If still fails, show hint after 2 seconds
@@ -109,7 +110,7 @@ export default function Home() {
     video.addEventListener("play", handlePlay);
     video.addEventListener("loadedmetadata", forcePlay);
     video.addEventListener("loadeddata", forcePlay);
-    
+
     // Try to play on visibility change (when user returns to tab)
     const handleVisibilityChange = () => {
       if (!document.hidden && video.paused) {
@@ -139,7 +140,8 @@ export default function Home() {
     const video = videoRef.current;
     if (video && video.paused) {
       video.muted = true; // Ensure muted
-      video.play()
+      video
+        .play()
         .then(() => {
           setShowPlayHint(false);
           console.log("Video played after user interaction");
@@ -166,7 +168,7 @@ export default function Home() {
   }
 
   return (
-    <div 
+    <div
       className="relative h-screen w-screen overflow-hidden bg-black"
       onClick={handleScreenTap}
       onTouchEnd={handleTouch}
@@ -190,20 +192,22 @@ export default function Home() {
             preload="auto"
             disablePictureInPicture
             className="absolute inset-0 h-full w-full object-cover"
-            style={{ 
-              WebkitPlaysinline: 'true',
-              objectFit: 'cover'
-            } as React.CSSProperties}
+            style={
+              {
+                WebkitPlaysinline: "true",
+                objectFit: "cover",
+              } as React.CSSProperties
+            }
           />
           {showPlayHint && !videoError && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm">
               <div className="text-white text-center px-6">
-                <svg 
-                  className="w-16 h-16 mx-auto mb-4 animate-pulse" 
-                  fill="currentColor" 
+                <svg
+                  className="w-16 h-16 mx-auto mb-4 animate-pulse"
+                  fill="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path d="M8 5v14l11-7z"/>
+                  <path d="M8 5v14l11-7z" />
                 </svg>
                 <p className="text-lg">Chạm để phát video</p>
               </div>

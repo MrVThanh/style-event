@@ -1,0 +1,40 @@
+{
+  "register": {
+    "title": "Please provide your registration information below",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "John Doe",
+    "email": "Email",
+    "emailPlaceholder": "example@company.com",
+    "gender": "Gender",
+    "genderPlaceholder": "Select gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "companyName": "Company Name",
+    "companyNamePlaceholder": "ABC Company",
+    "position": "Position",
+    "positionPlaceholder": "Director, Engineer,...",
+    "phone": "Phone Number",
+    "phonePlaceholder": "0912345678",
+    "submit": "Register",
+    "submitting": "Submitting...",
+    "reset": "Reset",
+    "selectLanguage": "Select Language",
+    "success": "Registration successful!",
+    "successDescription": "Your information has been recorded.",
+    "error": "Registration failed!",
+    "errorDescription": "An error occurred. Please try again.",
+    "networkError": "Network error. Please check your internet connection and try again.",
+    "timeoutError": "Request timeout. Please try again.",
+    "validation": {
+      "fullNameRequired": "Please enter your full name",
+      "emailRequired": "Please enter your email",
+      "emailInvalid": "Invalid email address",
+      "genderRequired": "Please select your gender",
+      "companyNameRequired": "Please enter your company name",
+      "positionRequired": "Please enter your position",
+      "phoneRequired": "Please enter your phone number",
+      "phoneInvalid": "Invalid phone number"
+    }
+  }
+}

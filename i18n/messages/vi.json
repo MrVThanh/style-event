@@ -1,0 +1,40 @@
+{
+  "register": {
+    "title": "Quý khách vui lòng cung cấp thông tin đăng ký bên dưới",
+    "fullName": "Họ và tên",
+    "fullNamePlaceholder": "Nguyễn Văn A",
+    "email": "Email",
+    "emailPlaceholder": "example@company.com",
+    "gender": "Giới tính",
+    "genderPlaceholder": "Chọn giới tính",
+    "male": "Nam",
+    "female": "Nữ",
+    "other": "Khác",
+    "companyName": "Tên công ty",
+    "companyNamePlaceholder": "Công ty ABC",
+    "position": "Chức vụ",
+    "positionPlaceholder": "Giám đốc, Kỹ sư,...",
+    "phone": "Số điện thoại",
+    "phonePlaceholder": "0912345678",
+    "submit": "Đăng ký",
+    "submitting": "Đang gửi...",
+    "reset": "Đặt lại",
+    "selectLanguage": "Chọn ngôn ngữ",
+    "success": "Đăng ký thành công!",
+    "successDescription": "Thông tin của bạn đã được ghi nhận.",
+    "error": "Đăng ký thất bại!",
+    "errorDescription": "Đã có lỗi xảy ra. Vui lòng thử lại.",
+    "networkError": "Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet và thử lại.",
+    "timeoutError": "Yêu cầu hết thời gian chờ. Vui lòng thử lại.",
+    "validation": {
+      "fullNameRequired": "Vui lòng nhập họ và tên",
+      "emailRequired": "Vui lòng nhập email",
+      "emailInvalid": "Email không hợp lệ",
+      "genderRequired": "Vui lòng chọn giới tính",
+      "companyNameRequired": "Vui lòng nhập tên công ty",
+      "positionRequired": "Vui lòng nhập chức vụ",
+      "phoneRequired": "Vui lòng nhập số điện thoại",
+      "phoneInvalid": "Số điện thoại không hợp lệ"
+    }
+  }
+}
