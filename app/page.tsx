@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+  const [showPlayHint, setShowPlayHint] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const playAttemptedRef = useRef(false);
 
@@ -36,21 +38,30 @@ export default function Home() {
 
     playAttemptedRef.current = true;
 
+    const handleError = () => {
+      console.error("Video failed to load");
+      setVideoError(true);
+    };
+
+    const handlePlay = () => {
+      setShowPlayHint(false);
+    };
+
     const attemptPlay = () => {
       video.play().catch((err: unknown) => {
         console.log("Video autoplay prevented, waiting for user interaction:", err);
         
-        // Safari often requires user interaction - add one-time click handler
-        const handleFirstInteraction = () => {
-          video.play().catch((e: unknown) => {
-            console.error("Play failed even after interaction:", e);
-          });
-        };
-
-        document.addEventListener("click", handleFirstInteraction, { once: true });
-        document.addEventListener("touchstart", handleFirstInteraction, { once: true });
+        // Show hint after 1 second if video still not playing
+        setTimeout(() => {
+          if (video.paused) {
+            setShowPlayHint(true);
+          }
+        }, 1000);
       });
     };
+
+    video.addEventListener("error", handleError);
+    video.addEventListener("play", handlePlay);
 
     // Try to play when video can play
     if (video.readyState >= 3) {
@@ -61,8 +72,20 @@ export default function Home() {
 
     return () => {
       video.removeEventListener("canplay", attemptPlay);
+      video.removeEventListener("error", handleError);
+      video.removeEventListener("play", handlePlay);
     };
   }, [hasVideo]);
+
+  const handleScreenTap = () => {
+    const video = videoRef.current;
+    if (video && video.paused) {
+      video.play().catch((e: unknown) => {
+        console.error("Play failed:", e);
+      });
+      setShowPlayHint(false);
+    }
+  };
 
   if (webUrl) {
     return (
@@ -75,7 +98,11 @@ export default function Home() {
   }
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden">
+    <div 
+      className="relative h-screen w-screen overflow-hidden bg-black"
+      onClick={handleScreenTap}
+      onTouchStart={handleScreenTap}
+    >
       {isMounted && hasImage ? (
         <FilledImage
           src={config.image_url}
@@ -84,17 +111,44 @@ export default function Home() {
           priority
         />
       ) : hasVideo ? (
-        <video
-          ref={videoRef}
-          src={config.video_url}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      ) : null}
+        <>
+          <video
+            ref={videoRef}
+            src={config.video_url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          {showPlayHint && !videoError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+              <div className="text-white text-center px-6">
+                <svg 
+                  className="w-16 h-16 mx-auto mb-4 animate-pulse" 
+                  fill="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                <p className="text-lg">Chạm để phát video</p>
+              </div>
+            </div>
+          )}
+          {videoError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black text-white">
+              <p className="text-center px-4">
+                Video không thể tải. Vui lòng thử lại hoặc mở bằng trình duyệt.
+              </p>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center bg-black text-white">
+          <p>Không có nội dung để hiển thị</p>
+        </div>
+      )}
     </div>
   );
 }
