@@ -2,6 +2,7 @@
 
 import FilledImage from "@/components/ui/filled-image";
 import React, { useEffect, useRef, useState } from "react";
+import { useMediaQuery } from 'usehooks-ts'
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
@@ -10,25 +11,57 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playAttemptedRef = useRef(false);
 
-  const config = {
-    web_url: "https://www.rockwool.com/north-america/",
-    video_url: "",
-    // "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770782911590308487_video_hung-dev-test.mp4?Expires=4924382998&Signature=e-VCVg8fNSWIzHxE56cyCayeTUpMfPG3cr~v7azTIAZav3glSjgBzQ9lXIZ6hVwcEe-lU4PNfCIl6PllNw~WfeBB1AYY0IcsRmzi-teVcG0XIdPIu-jykDMjWcyKGTLA18~w3bbAL0gscks4u7cAxiTUjP2r8Q9B6sbbg-vKFEzbFpj4hYXGUcCIMusXZvJQCBFy8kN-Vm7JTsFhueQn1XNZc4PLRZQblh~laYFYSA-CEwpxSjZeHP7FNhRcRZjF0HYR13ZWTmXh4txdygJwpJhxlbWU6CWRBsNH8SvAyqSW4SWCWXoHbwLczmllQVHoetnfuRhKUct0UNjfa5NBDg__&Key-Pair-Id=K1RAOUJU1Q3EVC",
-    image_url:
-      // "https://upload.wikimedia.org/wikipedia/commons/7/70/Example.png",
-      "",
-  };
+  const matches = useMediaQuery('(min-width: 768px)')
 
-  const webUrl = config.web_url?.trim();
-  const hasImage = config.image_url?.trim();
-  const hasVideo = config.video_url?.trim();
+  // Change this value to control what content to show
+  // Options: "mobile_video" | "desktop_video" | "mobile_image" | "desktop_image"
+  const hasShow = (matches ? "desktop_video" : "mobile_video") as "mobile_video" | "desktop_video" | "mobile_image" | "desktop_image"
+
+  const resource = {
+    mobile: {
+      video_url: "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770782911590308487_video_hung-dev-test.mp4?Expires=4924382998&Signature=e-VCVg8fNSWIzHxE56cyCayeTUpMfPG3cr~v7azTIAZav3glSjgBzQ9lXIZ6hVwcEe-lU4PNfCIl6PllNw~WfeBB1AYY0IcsRmzi-teVcG0XIdPIu-jykDMjWcyKGTLA18~w3bbAL0gscks4u7cAxiTUjP2r8Q9B6sbbg-vKFEzbFpj4hYXGUcCIMusXZvJQCBFy8kN-Vm7JTsFhueQn1XNZc4PLRZQblh~laYFYSA-CEwpxSjZeHP7FNhRcRZjF0HYR13ZWTmXh4txdygJwpJhxlbWU6CWRBsNH8SvAyqSW4SWCWXoHbwLczmllQVHoetnfuRhKUct0UNjfa5NBDg__&Key-Pair-Id=K1RAOUJU1Q3EVC",
+      image_url: "https://pnganime.com/web/image-thumbnails/529/887-md.png",
+    },
+    desktop: {
+      video_url: "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770782911590308487_video_hung-dev-test.mp4?Expires=4924382998&Signature=e-VCVg8fNSWIzHxE56cyCayeTUpMfPG3cr~v7azTIAZav3glSjgBzQ9lXIZ6hVwcEe-lU4PNfCIl6PllNw~WfeBB1AYY0IcsRmzi-teVcG0XIdPIu-jykDMjWcyKGTLA18~w3bbAL0gscks4u7cAxiTUjP2r8Q9B6sbbg-vKFEzbFpj4hYXGUcCIMusXZvJQCBFy8kN-Vm7JTsFhueQn1XNZc4PLRZQblh~laYFYSA-CEwpxSjZeHP7FNhRcRZjF0HYR13ZWTmXh4txdygJwpJhxlbWU6CWRBsNH8SvAyqSW4SWCWXoHbwLczmllQVHoetnfuRhKUct0UNjfa5NBDg__&Key-Pair-Id=K1RAOUJU1Q3EVC",
+      image_url: "https://i.pinimg.com/originals/5b/8c/85/5b8c853780def283ec9c6f5b62dbe498.png",
+    },
+  }
+
+  // Determine content based on hasShow value
+  const getContent = () => {
+    switch (hasShow) {
+      case "mobile_video":
+        return {
+          type: "video" as const,
+          url: resource.mobile.video_url,
+        }
+      case "mobile_image":
+        return {
+          type: "image" as const,
+          url: resource.mobile.image_url,
+        }
+      case "desktop_video":
+        return {
+          type: "video" as const,
+          url: resource.desktop.video_url,
+        }
+      case "desktop_image":
+        return {
+          type: "image" as const,
+          url: resource.desktop.image_url,
+        }
+      default:
+        return null
+    }
+  }
+
+  const content = getContent()
+  const hasVideo = content?.type === "video" && content.url?.trim()
+  const hasImage = content?.type === "image" && content.url?.trim()
 
   useEffect(() => {
     setIsMounted(true);
-    if (webUrl) {
-      // Prefer web_url: replace so user can't "back" to this page.
-      window.location.replace(webUrl);
-    }
 
     // Try to enable autoplay on Safari by triggering early
     const enableAutoplay = () => {
@@ -41,10 +74,10 @@ export default function Home() {
     };
 
     // Small delay to ensure video element is rendered
-    if (hasVideo && !webUrl) {
+    if (hasVideo) {
       setTimeout(enableAutoplay, 100);
     }
-  }, [webUrl, hasVideo]);
+  }, [hasVideo]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -157,14 +190,29 @@ export default function Home() {
     handleScreenTap();
   };
 
-  if (webUrl) {
+  // If no content matches the criteria, show error
+  if (!content) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-black text-white">
-        <a href={webUrl} className="underline">
-          Opening website...
-        </a>
+        <div className="text-center px-6">
+          <p className="text-lg">Không có nội dung phù hợp để hiển thị</p>
+          <p className="text-sm text-gray-400 mt-2">
+            Device: {matches ? "Desktop" : "Mobile"} | Mode: {hasShow}
+          </p>
+        </div>
       </div>
-    );
+    )
+  }
+
+  // Show loading state on server-side to prevent hydration mismatch
+  if (!isMounted) {
+    return (
+      <div className="relative h-screen w-screen overflow-hidden bg-black">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -173,10 +221,10 @@ export default function Home() {
       onClick={handleScreenTap}
       onTouchEnd={handleTouch}
     >
-      {isMounted && hasImage ? (
+      {hasImage ? (
         <FilledImage
-          src={config.image_url}
-          alt="image"
+          src={content.url}
+          alt="Display image"
           fit="contain"
           priority
         />
@@ -184,7 +232,7 @@ export default function Home() {
         <>
           <video
             ref={videoRef}
-            src={config.video_url}
+            src={content.url}
             autoPlay
             muted
             loop
@@ -223,9 +271,14 @@ export default function Home() {
         </>
       ) : (
         <div className="absolute inset-0 flex items-center justify-center bg-black text-white">
-          <p>Không có nội dung để hiển thị</p>
+          <div className="text-center px-6">
+            <p className="text-lg">Không có nội dung để hiển thị</p>
+            <p className="text-sm text-gray-400 mt-2">
+              URL không hợp lệ hoặc bị thiếu
+            </p>
+          </div>
         </div>
       )}
     </div>
-  );
+  )
 }
