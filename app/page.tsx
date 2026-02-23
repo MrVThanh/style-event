@@ -50,12 +50,20 @@ export default function Home() {
   const hasVideo = content?.type === "video" && Boolean(contentUrl)
   const hasImage = content?.type === "image" && Boolean(contentUrl)
   const webUrl = resource.web_url?.trim()
+  const videoLink = hasVideo ? contentUrl : ""
 
   useEffect(() => {
     if (!webUrl) return
     // Prefer replace so user can't "back" to this page.
     window.location.replace(webUrl)
+
   }, [webUrl])
+
+  useEffect(() => {
+    if (webUrl) return
+    if (!videoLink) return
+    window.location.replace(videoLink)
+  }, [webUrl, videoLink])
 
   // Reset video state when the selected content changes
   useEffect(() => {
@@ -64,12 +72,12 @@ export default function Home() {
   }, [content?.type, contentUrl])
 
   useEffect(() => {
-    if (webUrl) return
+    if (webUrl || videoLink) return
     setIsMounted(true);
-  }, [webUrl]);
+  }, [webUrl, videoLink]);
 
   useEffect(() => {
-    if (webUrl) return
+    if (webUrl || videoLink) return
     const video = videoRef.current;
     if (!hasVideo || !video) return;
 
@@ -92,7 +100,7 @@ export default function Home() {
       video.removeEventListener("ended", handleEnded);
       video.removeEventListener("error", handleError);
     };
-  }, [hasVideo, webUrl, contentUrl]);
+  }, [hasVideo, webUrl, videoLink, contentUrl]);
 
   const handlePlayClick = async () => {
     const video = videoRef.current;
@@ -117,6 +125,16 @@ export default function Home() {
       <div className="flex h-screen w-screen items-center justify-center bg-black text-white">
         <a href={webUrl} className="underline">
           Opening website...
+        </a>
+      </div>
+    )
+  }
+
+  if (videoLink) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-black text-white">
+        <a href={videoLink} className="underline">
+          Opening video...
         </a>
       </div>
     )
