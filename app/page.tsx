@@ -13,10 +13,6 @@ export default function Home() {
 
   const matches = useMediaQuery('(min-width: 768px)')
 
-  // Change this value to control what content to show
-  // Options: "mobile_video" | "desktop_video" | "mobile_image" | "desktop_image"
-  const hasShow = (matches ? "desktop_video" : "mobile_video") as "mobile_video" | "desktop_video" | "mobile_image" | "desktop_image"
-
   // Web : "https://www.rockwool.com/asia"
   // Video : "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770873907088273461_video_new_test.mp4?Expires=4924473907&Signature=VrrYrPith5R9Pt~~9KPZ5CPGUpOegB7G8vNbxW4alidZflHaZCFXr~k5JfV6HgciouOTHhMc9kuqfWEYiNuGC0gGKfkt9PNfef4oIIOhpQ17kXYLdg54Qf5ug1fkXWAXjvSinE~A0RRO1VSJ1vH26akDp-BW4AOZlumbTwl79UhdgpynliyRFkksurYHy8Lr9hNrIp2oA1bz97CvV7GTcr-0cpYWQy5XPCGSV~9h0sH57ufFaOWDxzY9r7-he9QTIlVDkCjEpiIPaF8pt8cCvrpb3NeWRu9hybkkZh0-QrdMgOoAosROr4hQbToVzhIldRlj3sMWySZy9Jn5tJ8urQ__&Key-Pair-Id=K1RAOUJU1Q3EVC"
   // Image : "https://i.pinimg.com/originals/5b/8c/85/5b8c853780def283ec9c6f5b62dbe498.png"
@@ -32,37 +28,28 @@ export default function Home() {
     },
   }
 
-  // Determine content based on hasShow value
-  const getContent = () => {
-    switch (hasShow) {
-      case "mobile_video":
-        return {
-          type: "video" as const,
-          url: resource.mobile.video_url,
-        }
-      case "mobile_image":
-        return {
-          type: "image" as const,
-          url: resource.mobile.image_url,
-        }
-      case "desktop_video":
-        return {
-          type: "video" as const,
-          url: resource.desktop.video_url,
-        }
-      case "desktop_image":
-        return {
-          type: "image" as const,
-          url: resource.desktop.image_url,
-        }
-      default:
-        return null
-    }
+  // Pick the first valid URL for the current device:
+  // web_url (handled separately) → video_url → image_url → fallback device
+  const pickContent = () => {
+    const primary = matches ? resource.desktop : resource.mobile
+    const secondary = matches ? resource.mobile : resource.desktop
+
+    const primaryVideo = primary.video_url?.trim()
+    const primaryImage = primary.image_url?.trim()
+    const secondaryVideo = secondary.video_url?.trim()
+    const secondaryImage = secondary.image_url?.trim()
+
+    if (primaryVideo) return { type: "video" as const, url: primaryVideo }
+    if (primaryImage) return { type: "image" as const, url: primaryImage }
+    if (secondaryVideo) return { type: "video" as const, url: secondaryVideo }
+    if (secondaryImage) return { type: "image" as const, url: secondaryImage }
+    return null
   }
 
-  const content = getContent()
-  const hasVideo = content?.type === "video" && content.url?.trim()
-  const hasImage = content?.type === "image" && content.url?.trim()
+  const content = pickContent()
+  const contentUrl = content?.url?.trim() ?? ""
+  const hasVideo = content?.type === "video" && Boolean(contentUrl)
+  const hasImage = content?.type === "image" && Boolean(contentUrl)
   const webUrl = resource.web_url?.trim()
 
   useEffect(() => {
@@ -70,6 +57,13 @@ export default function Home() {
     // Prefer replace so user can't "back" to this page.
     window.location.replace(webUrl)
   }, [webUrl])
+
+  // Reset video state when the selected video changes
+  useEffect(() => {
+    playAttemptedRef.current = false
+    setVideoError(false)
+    setShowPlayHint(false)
+  }, [content?.type, contentUrl])
 
   useEffect(() => {
     if (webUrl) return
@@ -220,7 +214,7 @@ export default function Home() {
         <div className="text-center px-6">
           <p className="text-lg">Không có nội dung phù hợp để hiển thị</p>
           <p className="text-sm text-gray-400 mt-2">
-            Device: {matches ? "Desktop" : "Mobile"} | Mode: {hasShow}
+            Device: {matches ? "Desktop" : "Mobile"}
           </p>
         </div>
       </div>
@@ -246,7 +240,7 @@ export default function Home() {
     >
       {hasImage ? (
         <FilledImage
-          src={content.url}
+          src={contentUrl}
           alt="Display image"
           fit="contain"
           priority
@@ -255,7 +249,7 @@ export default function Home() {
         <>
           <video
             ref={videoRef}
-            src={content.url}
+            src={contentUrl}
             autoPlay
             muted
             loop
