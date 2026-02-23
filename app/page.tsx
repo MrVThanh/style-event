@@ -7,9 +7,8 @@ import { useMediaQuery } from 'usehooks-ts'
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  const [showPlayHint, setShowPlayHint] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const playAttemptedRef = useRef(false);
 
   const matches = useMediaQuery('(min-width: 768px)')
 
@@ -58,143 +57,59 @@ export default function Home() {
     window.location.replace(webUrl)
   }, [webUrl])
 
-  // Reset video state when the selected video changes
+  // Reset video state when the selected content changes
   useEffect(() => {
-    playAttemptedRef.current = false
     setVideoError(false)
-    setShowPlayHint(false)
+    setIsPlaying(false)
   }, [content?.type, contentUrl])
 
   useEffect(() => {
     if (webUrl) return
     setIsMounted(true);
-
-    // Try to enable autoplay on Safari by triggering early
-    const enableAutoplay = () => {
-      const video = videoRef.current;
-      if (video && hasVideo) {
-        video.play().catch(() => {
-          // Will retry in the main video effect
-        });
-      }
-    };
-
-    // Small delay to ensure video element is rendered
-    if (hasVideo) {
-      setTimeout(enableAutoplay, 100);
-    }
-  }, [hasVideo, webUrl]);
+  }, [webUrl]);
 
   useEffect(() => {
-    const video = videoRef.current;
     if (webUrl) return
-    if (!hasVideo || !video || playAttemptedRef.current) return;
+    const video = videoRef.current;
+    if (!hasVideo || !video) return;
 
-    playAttemptedRef.current = true;
+    const handlePlay = () => setIsPlaying(true);
+    const handlePlaying = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+    const handleEnded = () => setIsPlaying(false);
+    const handleError = () => setVideoError(true);
 
-    // Ensure video is muted for Safari autoplay
-    video.muted = true;
-    video.playsInline = true;
-
-    const handleError = () => {
-      console.error("Video failed to load");
-      setVideoError(true);
-    };
-
-    const handlePlay = () => {
-      setShowPlayHint(false);
-    };
-
-    const forcePlay = () => {
-      if (video.paused) {
-        video.muted = true; // Ensure still muted
-        video.play().catch(() => {
-          // Silently fail, will be handled by other events
-        });
-      }
-    };
-
-    const attemptPlay = () => {
-      // Ensure muted before playing
-      video.muted = true;
-
-      // Try to play immediately
-      video
-        .play()
-        .then(() => {
-          console.log("Video playing successfully");
-          setShowPlayHint(false);
-        })
-        .catch((err: unknown) => {
-          console.log("Initial autoplay prevented:", err);
-
-          // For Safari mobile, try again after a short delay
-          setTimeout(() => {
-            video.muted = true;
-            video
-              .play()
-              .then(() => setShowPlayHint(false))
-              .catch(() => {
-                // If still fails, show hint after 2 seconds
-                setTimeout(() => {
-                  if (video.paused) {
-                    setShowPlayHint(true);
-                  }
-                }, 2000);
-              });
-          }, 300);
-        });
-    };
-
-    video.addEventListener("error", handleError);
     video.addEventListener("play", handlePlay);
-    video.addEventListener("loadedmetadata", forcePlay);
-    video.addEventListener("loadeddata", forcePlay);
-
-    // Try to play on visibility change (when user returns to tab)
-    const handleVisibilityChange = () => {
-      if (!document.hidden && video.paused) {
-        forcePlay();
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    // Try to play when video can play
-    if (video.readyState >= 3) {
-      attemptPlay();
-    } else {
-      video.addEventListener("canplay", attemptPlay, { once: true });
-    }
+    video.addEventListener("playing", handlePlaying);
+    video.addEventListener("pause", handlePause);
+    video.addEventListener("ended", handleEnded);
+    video.addEventListener("error", handleError);
 
     return () => {
-      video.removeEventListener("canplay", attemptPlay);
-      video.removeEventListener("error", handleError);
       video.removeEventListener("play", handlePlay);
-      video.removeEventListener("loadedmetadata", forcePlay);
-      video.removeEventListener("loadeddata", forcePlay);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      video.removeEventListener("playing", handlePlaying);
+      video.removeEventListener("pause", handlePause);
+      video.removeEventListener("ended", handleEnded);
+      video.removeEventListener("error", handleError);
     };
-  }, [hasVideo, webUrl]);
+  }, [hasVideo, webUrl, contentUrl]);
 
-  const handleScreenTap = () => {
+  const handlePlayClick = async () => {
     const video = videoRef.current;
-    if (video && video.paused) {
-      video.muted = true; // Ensure muted
-      video
-        .play()
-        .then(() => {
-          setShowPlayHint(false);
-          console.log("Video played after user interaction");
-        })
-        .catch((e: unknown) => {
-          console.error("Play failed even after tap:", e);
-        });
+    if (!video) return
+    try {
+      video.muted = false;
+      video.volume = 1;
+      await video.play();
+      setIsPlaying(true);
+    } catch (e) {
+      console.error("Play failed:", e);
     }
   };
 
   const handleTouch = (e: React.TouchEvent) => {
     // Handle touch separately to ensure play on mobile
-    handleScreenTap();
+    // No-op: user must tap play button
   };
 
   if (webUrl) {
@@ -235,7 +150,6 @@ export default function Home() {
   return (
     <div
       className="relative h-screen w-screen overflow-hidden bg-black"
-      onClick={handleScreenTap}
       onTouchEnd={handleTouch}
     >
       {hasImage ? (
@@ -250,11 +164,9 @@ export default function Home() {
           <video
             ref={videoRef}
             src={contentUrl}
-            autoPlay
-            muted
-            loop
+            controls
             playsInline
-            preload="auto"
+            preload="metadata"
             disablePictureInPicture
             className="absolute inset-0 h-full w-full object-cover"
             style={
@@ -264,19 +176,26 @@ export default function Home() {
               } as React.CSSProperties
             }
           />
-          {showPlayHint && !videoError && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-              <div className="text-white text-center px-6">
+          {!isPlaying && !videoError && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePlayClick();
+              }}
+              className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 backdrop-blur-[1px]"
+              aria-label="Play video"
+            >
+              <span className="flex h-20 w-20 items-center justify-center rounded-full bg-white/90 shadow-lg">
                 <svg
-                  className="w-16 h-16 mx-auto mb-4 animate-pulse"
+                  className="h-10 w-10 text-black"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
                   <path d="M8 5v14l11-7z" />
                 </svg>
-                <p className="text-lg">Chạm để phát video</p>
-              </div>
-            </div>
+              </span>
+            </button>
           )}
           {videoError && (
             <div className="absolute inset-0 flex items-center justify-center bg-black text-white">
