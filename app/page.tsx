@@ -17,14 +17,18 @@ export default function Home() {
   // Options: "mobile_video" | "desktop_video" | "mobile_image" | "desktop_image"
   const hasShow = (matches ? "desktop_video" : "mobile_video") as "mobile_video" | "desktop_video" | "mobile_image" | "desktop_image"
 
+  // Web : "https://www.rockwool.com/asia"
+  // Video : "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770873907088273461_video_new_test.mp4?Expires=4924473907&Signature=VrrYrPith5R9Pt~~9KPZ5CPGUpOegB7G8vNbxW4alidZflHaZCFXr~k5JfV6HgciouOTHhMc9kuqfWEYiNuGC0gGKfkt9PNfef4oIIOhpQ17kXYLdg54Qf5ug1fkXWAXjvSinE~A0RRO1VSJ1vH26akDp-BW4AOZlumbTwl79UhdgpynliyRFkksurYHy8Lr9hNrIp2oA1bz97CvV7GTcr-0cpYWQy5XPCGSV~9h0sH57ufFaOWDxzY9r7-he9QTIlVDkCjEpiIPaF8pt8cCvrpb3NeWRu9hybkkZh0-QrdMgOoAosROr4hQbToVzhIldRlj3sMWySZy9Jn5tJ8urQ__&Key-Pair-Id=K1RAOUJU1Q3EVC"
+  // Image : "https://i.pinimg.com/originals/5b/8c/85/5b8c853780def283ec9c6f5b62dbe498.png"
   const resource = {
+    web_url : "",
     mobile: {
-      video_url: "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770782911590308487_video_hung-dev-test.mp4?Expires=4924382998&Signature=e-VCVg8fNSWIzHxE56cyCayeTUpMfPG3cr~v7azTIAZav3glSjgBzQ9lXIZ6hVwcEe-lU4PNfCIl6PllNw~WfeBB1AYY0IcsRmzi-teVcG0XIdPIu-jykDMjWcyKGTLA18~w3bbAL0gscks4u7cAxiTUjP2r8Q9B6sbbg-vKFEzbFpj4hYXGUcCIMusXZvJQCBFy8kN-Vm7JTsFhueQn1XNZc4PLRZQblh~laYFYSA-CEwpxSjZeHP7FNhRcRZjF0HYR13ZWTmXh4txdygJwpJhxlbWU6CWRBsNH8SvAyqSW4SWCWXoHbwLczmllQVHoetnfuRhKUct0UNjfa5NBDg__&Key-Pair-Id=K1RAOUJU1Q3EVC",
-      image_url: "https://pnganime.com/web/image-thumbnails/529/887-md.png",
+      video_url: "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770873907088273461_video_new_test.mp4?Expires=4924473907&Signature=VrrYrPith5R9Pt~~9KPZ5CPGUpOegB7G8vNbxW4alidZflHaZCFXr~k5JfV6HgciouOTHhMc9kuqfWEYiNuGC0gGKfkt9PNfef4oIIOhpQ17kXYLdg54Qf5ug1fkXWAXjvSinE~A0RRO1VSJ1vH26akDp-BW4AOZlumbTwl79UhdgpynliyRFkksurYHy8Lr9hNrIp2oA1bz97CvV7GTcr-0cpYWQy5XPCGSV~9h0sH57ufFaOWDxzY9r7-he9QTIlVDkCjEpiIPaF8pt8cCvrpb3NeWRu9hybkkZh0-QrdMgOoAosROr4hQbToVzhIldRlj3sMWySZy9Jn5tJ8urQ__&Key-Pair-Id=K1RAOUJU1Q3EVC",
+      image_url: "",
     },
     desktop: {
-      video_url: "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770782911590308487_video_hung-dev-test.mp4?Expires=4924382998&Signature=e-VCVg8fNSWIzHxE56cyCayeTUpMfPG3cr~v7azTIAZav3glSjgBzQ9lXIZ6hVwcEe-lU4PNfCIl6PllNw~WfeBB1AYY0IcsRmzi-teVcG0XIdPIu-jykDMjWcyKGTLA18~w3bbAL0gscks4u7cAxiTUjP2r8Q9B6sbbg-vKFEzbFpj4hYXGUcCIMusXZvJQCBFy8kN-Vm7JTsFhueQn1XNZc4PLRZQblh~laYFYSA-CEwpxSjZeHP7FNhRcRZjF0HYR13ZWTmXh4txdygJwpJhxlbWU6CWRBsNH8SvAyqSW4SWCWXoHbwLczmllQVHoetnfuRhKUct0UNjfa5NBDg__&Key-Pair-Id=K1RAOUJU1Q3EVC",
-      image_url: "https://i.pinimg.com/originals/5b/8c/85/5b8c853780def283ec9c6f5b62dbe498.png",
+      video_url: "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770873907088273461_video_new_test.mp4?Expires=4924473907&Signature=VrrYrPith5R9Pt~~9KPZ5CPGUpOegB7G8vNbxW4alidZflHaZCFXr~k5JfV6HgciouOTHhMc9kuqfWEYiNuGC0gGKfkt9PNfef4oIIOhpQ17kXYLdg54Qf5ug1fkXWAXjvSinE~A0RRO1VSJ1vH26akDp-BW4AOZlumbTwl79UhdgpynliyRFkksurYHy8Lr9hNrIp2oA1bz97CvV7GTcr-0cpYWQy5XPCGSV~9h0sH57ufFaOWDxzY9r7-he9QTIlVDkCjEpiIPaF8pt8cCvrpb3NeWRu9hybkkZh0-QrdMgOoAosROr4hQbToVzhIldRlj3sMWySZy9Jn5tJ8urQ__&Key-Pair-Id=K1RAOUJU1Q3EVC",
+      image_url: "",
     },
   }
 
@@ -59,8 +63,16 @@ export default function Home() {
   const content = getContent()
   const hasVideo = content?.type === "video" && content.url?.trim()
   const hasImage = content?.type === "image" && content.url?.trim()
+  const webUrl = resource.web_url?.trim()
 
   useEffect(() => {
+    if (!webUrl) return
+    // Prefer replace so user can't "back" to this page.
+    window.location.replace(webUrl)
+  }, [webUrl])
+
+  useEffect(() => {
+    if (webUrl) return
     setIsMounted(true);
 
     // Try to enable autoplay on Safari by triggering early
@@ -77,10 +89,11 @@ export default function Home() {
     if (hasVideo) {
       setTimeout(enableAutoplay, 100);
     }
-  }, [hasVideo]);
+  }, [hasVideo, webUrl]);
 
   useEffect(() => {
     const video = videoRef.current;
+    if (webUrl) return
     if (!hasVideo || !video || playAttemptedRef.current) return;
 
     playAttemptedRef.current = true;
@@ -167,7 +180,7 @@ export default function Home() {
       video.removeEventListener("loadeddata", forcePlay);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [hasVideo]);
+  }, [hasVideo, webUrl]);
 
   const handleScreenTap = () => {
     const video = videoRef.current;
@@ -189,6 +202,16 @@ export default function Home() {
     // Handle touch separately to ensure play on mobile
     handleScreenTap();
   };
+
+  if (webUrl) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-black text-white">
+        <a href={webUrl} className="underline">
+          Opening website...
+        </a>
+      </div>
+    )
+  }
 
   // If no content matches the criteria, show error
   if (!content) {
