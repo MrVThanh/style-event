@@ -13,11 +13,11 @@ export default function Home() {
 
   const matches = useMediaQuery('(min-width: 768px)')
 
-  // Web : "https://www.rockwool.com/asia"
+  // Web : "https://www.rockwool.com"
   // Video : "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770873907088273461_video_new_test.mp4?Expires=4924473907&Signature=VrrYrPith5R9Pt~~9KPZ5CPGUpOegB7G8vNbxW4alidZflHaZCFXr~k5JfV6HgciouOTHhMc9kuqfWEYiNuGC0gGKfkt9PNfef4oIIOhpQ17kXYLdg54Qf5ug1fkXWAXjvSinE~A0RRO1VSJ1vH26akDp-BW4AOZlumbTwl79UhdgpynliyRFkksurYHy8Lr9hNrIp2oA1bz97CvV7GTcr-0cpYWQy5XPCGSV~9h0sH57ufFaOWDxzY9r7-he9QTIlVDkCjEpiIPaF8pt8cCvrpb3NeWRu9hybkkZh0-QrdMgOoAosROr4hQbToVzhIldRlj3sMWySZy9Jn5tJ8urQ__&Key-Pair-Id=K1RAOUJU1Q3EVC"
   // Image : "https://i.pinimg.com/originals/5b/8c/85/5b8c853780def283ec9c6f5b62dbe498.png"
   const resource = {
-    web_url : "",
+    web_url : "https://www.rockwool.com",
     mobile: {
       video_url: "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1770873907088273461_video_new_test.mp4?Expires=4924473907&Signature=VrrYrPith5R9Pt~~9KPZ5CPGUpOegB7G8vNbxW4alidZflHaZCFXr~k5JfV6HgciouOTHhMc9kuqfWEYiNuGC0gGKfkt9PNfef4oIIOhpQ17kXYLdg54Qf5ug1fkXWAXjvSinE~A0RRO1VSJ1vH26akDp-BW4AOZlumbTwl79UhdgpynliyRFkksurYHy8Lr9hNrIp2oA1bz97CvV7GTcr-0cpYWQy5XPCGSV~9h0sH57ufFaOWDxzY9r7-he9QTIlVDkCjEpiIPaF8pt8cCvrpb3NeWRu9hybkkZh0-QrdMgOoAosROr4hQbToVzhIldRlj3sMWySZy9Jn5tJ8urQ__&Key-Pair-Id=K1RAOUJU1Q3EVC",
       image_url: "",
