@@ -18,11 +18,11 @@ export default function Home() {
   const resource = {
     web_url : "",
     mobile: {
-      video_url: "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1771837786864355651_video_hung-dev-test.mp4?Expires=4925437789&Signature=Fj6~P6NnVJq9KSscGLSFHNbYxYaZwrsbNrlZp~tFvrNPKROuR4AtHv9CYMcGcaRdk9eTZHxIAAl91myVIspxcX9Zj8kV3qaVnYClrlE2bBZXs8JEdb9uU34s-x6QKkhMdKKF3wJn0PUSImyBh1IEgGjibgN6JQ~~~cqQjAZ05Zm4TfOg2vGUJlgvSAcJvR8yeLfsc-qFtYREmxhlXXCI7o0Bh3ATu778S2cZv5NCvSJP4KnQho1TiMH8J0-B5C~XTdiJNwTAPCYznfcrEOETu~NJ71Zv01uc9ovMlhYqChrXQhGCeMQVb5rZeg2thw1FgDl9NNFqtgnsk5xD948ezw__&Key-Pair-Id=K1RAOUJU1Q3EVC",
+      video_url: "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1771922539648019342_video_hung-dev-test.mp4?Expires=4925522541&Signature=BtzGkVz56ghNKIO8v-nAZjQaCzVUMm9bVupGOPmt6ylF5n9ABnPqwU4KhvyjSBUY9F3mbQ3YyLx8f6og92rgMOTesKM1tNmV1haP9xlESkisewaV0VUH0yl5Xc2c7yDqAjI~JuQk6vecawAP2WXrshMiaxMYBHbzhTauoFpJOFEN-lrEIH5NxMr05D-TTyX8OJjXfJVX2LQQ~OA4Oa4kNCbFAV~EL4~u9GJCSU-gp1ofdVSKe-myW-SmxuPtmBN-IlSyrsh2OswFj6dazizkFCRLjJ6Q828AFYN5k9dafmTrmWgcIQJ81JM~qq5~EizcvKUOp7IKbvWA3usUQ1TKwQ__&Key-Pair-Id=K1RAOUJU1Q3EVC",
       image_url: "",
     },
     desktop: {
-      video_url: "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1771837786864355651_video_hung-dev-test.mp4?Expires=4925437789&Signature=Fj6~P6NnVJq9KSscGLSFHNbYxYaZwrsbNrlZp~tFvrNPKROuR4AtHv9CYMcGcaRdk9eTZHxIAAl91myVIspxcX9Zj8kV3qaVnYClrlE2bBZXs8JEdb9uU34s-x6QKkhMdKKF3wJn0PUSImyBh1IEgGjibgN6JQ~~~cqQjAZ05Zm4TfOg2vGUJlgvSAcJvR8yeLfsc-qFtYREmxhlXXCI7o0Bh3ATu778S2cZv5NCvSJP4KnQho1TiMH8J0-B5C~XTdiJNwTAPCYznfcrEOETu~NJ71Zv01uc9ovMlhYqChrXQhGCeMQVb5rZeg2thw1FgDl9NNFqtgnsk5xD948ezw__&Key-Pair-Id=K1RAOUJU1Q3EVC",
+      video_url: "https://d2tlyqjp4runby.cloudfront.net/media_video_uploader/1771922539648019342_video_hung-dev-test.mp4?Expires=4925522541&Signature=BtzGkVz56ghNKIO8v-nAZjQaCzVUMm9bVupGOPmt6ylF5n9ABnPqwU4KhvyjSBUY9F3mbQ3YyLx8f6og92rgMOTesKM1tNmV1haP9xlESkisewaV0VUH0yl5Xc2c7yDqAjI~JuQk6vecawAP2WXrshMiaxMYBHbzhTauoFpJOFEN-lrEIH5NxMr05D-TTyX8OJjXfJVX2LQQ~OA4Oa4kNCbFAV~EL4~u9GJCSU-gp1ofdVSKe-myW-SmxuPtmBN-IlSyrsh2OswFj6dazizkFCRLjJ6Q828AFYN5k9dafmTrmWgcIQJ81JM~qq5~EizcvKUOp7IKbvWA3usUQ1TKwQ__&Key-Pair-Id=K1RAOUJU1Q3EVC",
       image_url: "",
     },
   }
