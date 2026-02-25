@@ -1,6 +1,7 @@
 {
   "register": {
-    "title": "Quý khách vui lòng cung cấp thông tin đăng ký bên dưới",
+    "title": "Chào mừng đến với sự kiện ra mắt ROCKWOOL VIỆT NAM",
+    "title_2": "Quý khách vui lòng đăng kí thông tin",
     "fullName": "Họ và tên",
     "fullNamePlaceholder": "Nguyễn Văn A",
     "email": "Email",

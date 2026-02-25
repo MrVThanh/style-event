@@ -5,7 +5,6 @@ import BgImage from "@/assets/images/bg-image.png";
 import LogoImage from "@/assets/images/logo-image.png";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
   Field,
@@ -15,18 +14,21 @@ import {
 } from "@/components/ui/field";
 import FilledImage from "@/components/ui/filled-image";
 import { Input } from "@/components/ui/input";
+import { isApiError } from "@/lib/http";
 import {
   createRegisterAccountSchema,
   TRegisterAccountSchema,
 } from "@/validation/auth/register-account";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { isApiError } from "@/lib/http";
 
 const RegisterPage = () => {
+
+
   const t = useTranslations();
   const [isPending, startTransition] = useTransition();
 
@@ -55,7 +57,7 @@ const RegisterPage = () => {
   return (
     <div className="flex items-center justify-center h-screen w-screen overflow-hidden">
       <div className="size-full grid grid-cols-1 md:grid-cols-4">
-        <div className="md:col-span-3">
+        <div className="hidden md:block md:col-span-3">
           <FilledImage src={BgImage} alt="Background Image" fit="fill" />
         </div>
 
@@ -68,9 +70,13 @@ const RegisterPage = () => {
             <LanguageSwitcher />
           </div>
 
-          <h1 className="text-xl font-bold text-center text-red-800">
+          <h1 className="text-xl font-bold text-center text-red-800 uppercase">
             {t("register.title")}
           </h1>
+
+          <h2 className="text-lg font-bold text-center text-red-800 uppercase">
+            {t("register.title_2")}
+          </h2>
 
           <form id="register-form" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>

@@ -1,6 +1,7 @@
 {
   "register": {
-    "title": "Please provide your registration information below",
+    "title": "Welcome to the ROCKWOOL VIETNAM launch event",
+    "title_2": "Please register your information below",
     "fullName": "Full Name",
     "fullNamePlaceholder": "John Doe",
     "email": "Email",
