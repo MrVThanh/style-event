@@ -56,12 +56,13 @@ const RegisterPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen w-screen overflow-hidden">
-      <div className="size-full grid grid-cols-1 md:grid-cols-4">
-        <div className="hidden md:block md:col-span-3">
+      {/* <div className="size-full grid grid-cols-1 md:grid-cols-4"> */}
+      <div className="size-full grid grid-cols-1">
+        {/* <div className="hidden md:block md:col-span-3">
           <FilledImage src={BgImage} alt="Background Image" fit="fill" />
-        </div>
+        </div> */}
 
-        <div className="flex flex-col gap-4 justify-start col-span-1 md:col-span-1 rounded-none p-4 overflow-y-auto">
+        <div className="flex flex-col gap-2 justify-start col-span-1 md:col-span-1 rounded-none p-4 overflow-y-auto">
           <Card className="w-full aspect-video">
             <FilledImage src={LogoImage} alt="Logo" fit="contain" />
           </Card>
@@ -85,7 +86,7 @@ const RegisterPage = () => {
                 name="full_name"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="full_name">
                       {t("register.fullName")}{" "}
                       <span className="text-red-600">*</span>
@@ -110,7 +111,7 @@ const RegisterPage = () => {
                 name="email"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="email">
                       {t("register.email")}{" "}
                       <span className="text-red-600">*</span>
@@ -136,7 +137,7 @@ const RegisterPage = () => {
                 name="company_name"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="company_name">
                       {t("register.companyName")}{" "}
                       <span className="text-red-600">*</span>
@@ -161,7 +162,7 @@ const RegisterPage = () => {
                 name="position"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="position">
                       {t("register.position")}{" "}
                       <span className="text-red-600">*</span>
@@ -186,7 +187,7 @@ const RegisterPage = () => {
                 name="phone"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="phone">
                       {t("register.phone")}{" "}
                       <span className="text-red-600">*</span>
