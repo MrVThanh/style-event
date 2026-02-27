@@ -12,7 +12,10 @@ export async function register(
   body: TRegisterAccountSchema,
 ): Promise<ApiResponse> {
   try {
-    const res = await http.post(`/api/v1/registers`, body);
+    const res = await http.post(`/api/v1/registers`, body, {
+      baseUrl: "https://54-151-179-240.nip.io",
+      insecureTls: true,
+    });
 
     if (isApiError(res)) return res;
     const { message, status_code } = res;

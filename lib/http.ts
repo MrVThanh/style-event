@@ -7,6 +7,7 @@ type CustomOptions = RequestInit & {
   lang?: string;
   searchParams?: queryString.StringifiableRecord | undefined;
   responseType?: "json" | "blob";
+  insecureTls?: boolean; // server-only: allow self-signed cert (development)
 };
 
 export type ActionResponse<TData = undefined> =
@@ -76,8 +77,32 @@ const request = async <TData = undefined>(
       { skipNull: true, skipEmptyString: true },
     );
 
+  // Server-only: allow self-signed TLS when explicitly requested.
+  // This is useful for dev environments; prefer proper certificates in production.
+  let dispatcher: unknown | undefined = undefined;
+  if (
+    options?.insecureTls &&
+    typeof window === "undefined" &&
+    fetchUrl.startsWith("https://")
+  ) {
+    try {
+      const { createRequire } = await import("module");
+      const require = createRequire(import.meta.url);
+      // Use require() to avoid TS module-resolution issues in some configs.
+      const undici = require("undici") as any;
+      dispatcher = new undici.Agent({
+        connect: {
+          rejectUnauthorized: false,
+        },
+      });
+    } catch {
+      // If undici isn't available, fall back to default fetch behavior.
+    }
+  }
+
   const res = await fetch(fetchUrl, {
     ...options,
+    ...(dispatcher ? ({ dispatcher } as any) : null),
     headers: {
       ...baseHeaders,
       ...options?.headers,
@@ -89,7 +114,7 @@ const request = async <TData = undefined>(
 
   const payload = (await res.json()) as ApiResponse<TData>;
 
-  if (process.env.NEXT_PUBLIC_LOG_FETCH !== "false")
+  if (process.env.NEXT_PUBLIC_LOG_FETCH === "true") {
     console.log({
       url: fetchUrl,
       headers: {
@@ -100,6 +125,7 @@ const request = async <TData = undefined>(
       body: body ? (body instanceof FormData ? body : JSON.parse(body)) : null,
       payload: payload,
     });
+  }
 
   return payload;
 };

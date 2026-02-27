@@ -21,6 +21,8 @@
     "submitting": "Submitting...",
     "reset": "Reset",
     "selectLanguage": "Select Language",
+    "toastSuccess": "You have registered successfully",
+    "toastError": "Registration failed",
     "success": "Registration successful!",
     "successDescription": "Your information has been recorded.",
     "error": "Registration failed!",

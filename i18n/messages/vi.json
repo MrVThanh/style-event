@@ -21,6 +21,8 @@
     "submitting": "Đang gửi...",
     "reset": "Đặt lại",
     "selectLanguage": "Chọn ngôn ngữ",
+    "toastSuccess": "Quý khách đã đăng ký thành công",
+    "toastError": "Đăng ký thất bại",
     "success": "Đăng ký thành công!",
     "successDescription": "Thông tin của bạn đã được ghi nhận.",
     "error": "Đăng ký thất bại!",

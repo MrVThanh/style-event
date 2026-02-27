@@ -47,9 +47,13 @@ const RegisterPage = () => {
     startTransition(async () => {
       const response = await register(data);
       if (isApiError(response)) {
-        toast.error(response.message);
+        toast.error(t("register.toastError"));
       } else {
-        toast.success(t("register.success"));
+        if (response.status_code >= 200 && response.status_code < 300) {
+          toast.success(t("register.toastSuccess"));
+        } else {
+          toast.error(t("register.toastError"));
+        }
       }
     });
   }
