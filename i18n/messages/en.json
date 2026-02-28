@@ -39,6 +39,7 @@
       "positionRequired": "Please enter your position",
       "phoneRequired": "Please enter your phone number",
       "phoneInvalid": "Invalid phone number"
-    }
+    },
+    "backToRegisterPage": "Back to register page"
   }
 }
