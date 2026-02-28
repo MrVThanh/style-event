@@ -23,6 +23,7 @@
     "selectLanguage": "Select Language",
     "toastSuccess": "You have registered successfully",
     "toastError": "Registration failed",
+    "checkInSuccess": "CHECK-IN SUCCESSFULLY",
     "success": "Registration successful!",
     "successDescription": "Your information has been recorded.",
     "error": "Registration failed!",

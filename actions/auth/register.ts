@@ -13,7 +13,7 @@ export async function register(
 ): Promise<ApiResponse> {
   try {
     const res = await http.post(`/api/v1/registers`, body, {
-      baseUrl: "https://54-151-179-240.nip.io",
+      baseUrl: "https://13-213-64-179.nip.io",
       insecureTls: true,
     });
 

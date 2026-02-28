@@ -14,15 +14,16 @@ import {
 } from "@/components/ui/field";
 import FilledImage from "@/components/ui/filled-image";
 import { Input } from "@/components/ui/input";
+import { Modal } from "@/components/ui/modal";
 import { isApiError } from "@/lib/http";
 import {
   createRegisterAccountSchema,
   TRegisterAccountSchema,
 } from "@/validation/auth/register-account";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Check, Loader2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -31,6 +32,7 @@ const RegisterPage = () => {
 
   const t = useTranslations();
   const [isPending, startTransition] = useTransition();
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
 
   const form = useForm<TRegisterAccountSchema>({
     resolver: zodResolver(createRegisterAccountSchema(t)),
@@ -50,7 +52,7 @@ const RegisterPage = () => {
         toast.error(t("register.toastError"));
       } else {
         if (response.status_code >= 200 && response.status_code < 300) {
-          toast.success(t("register.toastSuccess"));
+          setIsSuccessOpen(true);
         } else {
           toast.error(t("register.toastError"));
         }
@@ -60,6 +62,26 @@ const RegisterPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen w-screen overflow-hidden">
+      <Modal open={isSuccessOpen} onClose={() => setIsSuccessOpen(false)}>
+        <button
+          type="button"
+          onClick={() => setIsSuccessOpen(false)}
+          className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+          aria-label="Close"
+        >
+          <X className="h-5 w-5" />
+        </button>
+
+        <div className="px-8 py-10 text-center">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-500">
+            <Check className="h-8 w-8 text-white" strokeWidth={3} />
+          </div>
+          <div className="text-2xl font-semibold text-gray-900">
+            {t("register.checkInSuccess")}
+          </div>
+        </div>
+      </Modal>
+
       {/* <div className="size-full grid grid-cols-1 md:grid-cols-4"> */}
       <div className="size-full grid grid-cols-1">
         {/* <div className="hidden md:block md:col-span-3">
