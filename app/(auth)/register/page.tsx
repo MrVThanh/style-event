@@ -45,17 +45,18 @@ const RegisterPage = () => {
   });
 
   function onSubmit(data: TRegisterAccountSchema) {
+    console.log(data);
     startTransition(async () => {
-      const response = await register(data);
-      if (isApiError(response)) {
-        toast.error(t("register.toastError"));
-      } else {
-        if (response.status_code == 201) {
-          router.push("/login/success");
-        } else {
-          toast.error(t("register.toastError"));
-        }
-      }
+      // const response = await register(data);
+      // if (isApiError(response)) {
+      //   toast.error(t("register.toastError"));
+      // } else {
+      //   if (response.status_code == 201) {
+      //     router.push("/login/success");
+      //   } else {
+      //     toast.error(t("register.toastError"));
+      //   }
+      // }
     });
   }
 
